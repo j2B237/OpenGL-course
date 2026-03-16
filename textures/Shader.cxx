@@ -1,6 +1,6 @@
 #include "Shader.h"
 
-//#define DEBUG 
+#define DEBUG 1
 #define SHADER "SHADER::"
 
 Shader::Shader(const char *vertexPath, const char *fragmentpath) : m_id (0)
@@ -19,7 +19,7 @@ Shader::Shader(const char *vertexPath, const char *fragmentpath) : m_id (0)
     const char *vertexSource = vertexCode.c_str();
     const char *fragmentSource = fragmentCode.c_str();
 
-#ifdef DEBUG
+#if DEBUG == 1
     std::cerr << "vertex shader source:\n" << vertexSource << "\n";
     std::cerr << "fragment shader source:\n" << fragmentSource << "\n";
 #endif
@@ -101,7 +101,7 @@ GLuint Shader::createShader(const char *shaderSource, GLenum type)
 {
     GLuint shader = glCreateShader(type);
 
-#ifdef DEBUG
+#if DEBUG == 1
     std::cerr << SHADER << "shader id : " << shader << '\n';
 #endif
 
