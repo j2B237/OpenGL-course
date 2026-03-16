@@ -16,6 +16,9 @@
 #include <GLFW/glfw3.h>
 
 #include <iostream>
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
+
 #include "Shader.h"
 
 #define MAIN "MAIN::"
@@ -109,12 +112,40 @@ main(int argc, char *argv[])
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
     }
 
+    // Loading and creating textures
+    GLuint textureID;
+
+    glGenTextures(1, &textureID);
+    glBindTexture(GL_TEXTURE_2D, textureID);
+
+    // Wrapping params
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+    // Filtering params
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);   // Smooth texture when object is far
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);  // show individual pixel when object is close
+
+    int width, height, nrChannels;
+    stbi_set_flip_vertically_on_load(true);
+
+    unsigned char *data = stbi_load("./data/textures/container.jpg", &width, &height, &nrChannels, 0);
+    if(data){
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, (GLvoid*)data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+    }
+    else{
+        std::cerr << MAIN << "failed to load image\n";
+    }
+
+    stbi_image_free(data);
+
     // ==== Game loop ======
 
     while (!glfwWindowShouldClose (window)){
 
         // clear background color
-        glClearColor (0.8f, 0.8f, 0.8f, 1.0f);
+        glClearColor (0.2f, 0.3f, 0.3f, 1.0f);
         glClear (GL_COLOR_BUFFER_BIT);
 
         // processInput
@@ -122,6 +153,9 @@ main(int argc, char *argv[])
 
         // Update world
         program->use();
+        
+        // Activate texture
+        glBindTexture(GL_TEXTURE_2D, textureID);
 
         glBindVertexArray(vaos[0]);
         {
@@ -144,7 +178,10 @@ main(int argc, char *argv[])
             
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (GLvoid*)0);
         }
+        
         glBindVertexArray(0);
+        glBindTexture(GL_TEXTURE_2D, 0);            // deactivate texture
+
 
         // Poll events
         glfwPollEvents();
