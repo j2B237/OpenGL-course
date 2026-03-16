@@ -1,6 +1,6 @@
 #include "Shader.h"
 
-#define DEBUG 1
+#define DEBUG 0
 #define SHADER "SHADER::"
 
 Shader::Shader(const char *vertexPath, const char *fragmentpath) : m_id (0)
