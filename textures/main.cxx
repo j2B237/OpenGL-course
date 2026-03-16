@@ -113,7 +113,7 @@ main(int argc, char *argv[])
     }
 
     // Loading and creating textures
-    GLuint textureID;
+    /*GLuint textureID;
 
     glGenTextures(1, &textureID);
     glBindTexture(GL_TEXTURE_2D, textureID);
@@ -139,7 +139,8 @@ main(int argc, char *argv[])
     }
 
     stbi_image_free(data);
-
+    */
+   
     // ==== Game loop ======
 
     while (!glfwWindowShouldClose (window)){
@@ -155,8 +156,8 @@ main(int argc, char *argv[])
         program->use();
         
         // Activate texture
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, textureID);
+        /*glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, textureID);*/
         program->setInt("containerID", 0);
 
         // TODO:
