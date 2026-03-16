@@ -155,7 +155,11 @@ main(int argc, char *argv[])
         program->use();
         
         // Activate texture
+        glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, textureID);
+        program->setInt("containerID", 0);
+
+        // TODO:
 
         glBindVertexArray(vaos[0]);
         {
