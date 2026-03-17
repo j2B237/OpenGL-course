@@ -29,8 +29,33 @@ void Texture2D::activate(GLenum textureUnit)
     glBindTexture(GL_TEXTURE_2D, m_Id);
 }
 
+std::string Texture2D::getFileExtension(const char *filename)
+{
+    if (!filename)
+        return std::string();
+
+    std::string path(filename);
+
+    // Find the last path separator and the last dot
+    size_t lastSlash = path.find_last_of("/\\");
+    size_t lastDot = path.find_last_of('.');
+
+    // No extension found
+    if (lastDot == std::string::npos)
+        return std::string();
+
+    // Dot is part of a directory (e.g. ".config/file"), not the filename
+    if (lastSlash != std::string::npos && lastDot < lastSlash)
+        return std::string();
+
+    return path.substr(lastDot + 1);
+}
+
 void Texture2D::loadImageFromFile(const char *filename)
 {
+    // Find the file extension
+    std::string extension = getFileExtension(filename);
+
     // Make sure image are load correctly
     stbi_set_flip_vertically_on_load(true);
 
@@ -40,8 +65,14 @@ void Texture2D::loadImageFromFile(const char *filename)
 #if DEBUG == 1
     std::cerr << TAG << "Texture's size is " << m_width << " x " << m_height << " pixels\n";
 #endif
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGB, GL_UNSIGNED_BYTE, (GLvoid*)m_data);
-        glGenerateMipmap(GL_TEXTURE_2D);
+        if (extension.compare("jpg") == 0){
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGB, GL_UNSIGNED_BYTE, (GLvoid*)m_data);
+            glGenerateMipmap(GL_TEXTURE_2D);
+        }
+       else if (extension.compare("png") == 0){
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)m_data);
+            glGenerateMipmap(GL_TEXTURE_2D);
+       }
     }
     else{
         std::cerr << TAG << "failed to load image\n";

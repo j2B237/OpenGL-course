@@ -13,6 +13,8 @@
 
 #define GLAD_IMPLEMENTATION_NONE
 #include <glad/glad.h>
+
+#include <string>
 #include <iostream>
 
 #define DEBUG 1
@@ -31,6 +33,7 @@ private:
 
     /*[Private methods]*/
 
+    std::string getFileExtension(const char *filename);
     void loadImageFromFile(const char *filename);
     void createTexture (GLenum wrapParams, GLenum filterParams);
 

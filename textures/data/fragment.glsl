@@ -5,8 +5,10 @@ in vec3 texColor;
 in vec2 textureCoord;
 
 uniform sampler2D containerTex;
+uniform sampler2D emojiTex;
 
 void main()
 {
-    fragColor = texture(containerTex, textureCoord) * vec4(texColor, 1.0f);
+    // emoji texture will be visible at 80% while container texture at 20%
+    fragColor = mix(texture(containerTex, textureCoord), texture(emojiTex, textureCoord), 0.2);
 }

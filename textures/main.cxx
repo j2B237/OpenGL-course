@@ -16,8 +16,6 @@
 #include <GLFW/glfw3.h>
 
 #include <iostream>
-//#define STB_IMAGE_IMPLEMENTATION
-//#include <stb_image.h>
 
 #include "Shader.h"
 #include "Texture2D.h"
@@ -114,7 +112,9 @@ main(int argc, char *argv[])
     }
 
     // Loading and creating textures
+    
     Texture2D *containerTex = new Texture2D("./data/textures/container.jpg");
+    Texture2D *emojiTex = new Texture2D("./data/textures/emoji.png");
 
     // ==== Game loop ======
 
@@ -135,6 +135,9 @@ main(int argc, char *argv[])
         containerTex->activate(GL_TEXTURE0);
         program->setInt("containerID", 0);
 
+        emojiTex->activate(GL_TEXTURE1);
+        program->setInt("emojiTex", 1);
+        
 
         glBindVertexArray(vaos[0]);
         {
