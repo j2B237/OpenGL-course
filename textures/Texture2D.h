@@ -37,6 +37,8 @@ private:
     /*[Private member variables]*/
 
     GLuint m_Id;
-    int m_width, m_height, m_nrChannels;
-    unsigned char *m_data;
+
+    int m_width;
+    int m_height;
+    int m_nrChannels;
 };

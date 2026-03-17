@@ -16,10 +16,11 @@
 #include <GLFW/glfw3.h>
 
 #include <iostream>
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
+//#define STB_IMAGE_IMPLEMENTATION
+//#include <stb_image.h>
 
 #include "Shader.h"
+#include "Texture2D.h"
 
 #define MAIN "MAIN::"
 #define DEBUG 1
@@ -113,34 +114,8 @@ main(int argc, char *argv[])
     }
 
     // Loading and creating textures
-    /*GLuint textureID;
+    Texture2D *containerTex = new Texture2D("./data/textures/container.jpg");
 
-    glGenTextures(1, &textureID);
-    glBindTexture(GL_TEXTURE_2D, textureID);
-
-    // Wrapping params
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-    // Filtering params
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);   // Smooth texture when object is far
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);  // show individual pixel when object is close
-
-    int width, height, nrChannels;
-    stbi_set_flip_vertically_on_load(true);
-
-    unsigned char *data = stbi_load("./data/textures/container.jpg", &width, &height, &nrChannels, 0);
-    if(data){
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, (GLvoid*)data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-    }
-    else{
-        std::cerr << MAIN << "failed to load image\n";
-    }
-
-    stbi_image_free(data);
-    */
-   
     // ==== Game loop ======
 
     while (!glfwWindowShouldClose (window)){
@@ -156,11 +131,10 @@ main(int argc, char *argv[])
         program->use();
         
         // Activate texture
-        /*glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, textureID);*/
+   
+        containerTex->activate(GL_TEXTURE0);
         program->setInt("containerID", 0);
 
-        // TODO:
 
         glBindVertexArray(vaos[0]);
         {
@@ -197,6 +171,7 @@ main(int argc, char *argv[])
 
     // Free unused resources
 
+    delete containerTex;
     delete program;
     glfwTerminate();
 
