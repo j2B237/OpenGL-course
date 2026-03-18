@@ -1,5 +1,5 @@
 echo "Cleanup project....."
-echo "\n"
+echo ""
 
 rm *.o
 
@@ -8,12 +8,12 @@ echo "Compiling files..."
 g++ -Wall -Werror -pedantic -c main.cxx
 g++ -Wall -Werror -pedantic -c glad.c
 
-echo "\n"
+echo ""
 echo "Linking obj files ..."
 
-g++ *.o -ldl -glfw -o application
+g++ *.o -ldl -lglfw -o application
 
-echo "\n"
+echo ""
 echo "Done ..."
 
 
