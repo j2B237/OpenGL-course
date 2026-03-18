@@ -64,6 +64,12 @@ void Shader::setBool(const std::string &name, bool value)
     glUniform1i (location, (GLint)value);
 }
 
+void Shader::setMat4(const std::string &name, glm::mat4 matrix)
+{
+    GLint location = glGetUniformLocation (m_id, name.c_str());
+    glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
+}
+
 GLuint Shader::createProgram(const char *vertexPath, const char *fragmentPath)
 {
     GLuint vertex = createShader (vertexPath, GL_VERTEX_SHADER);

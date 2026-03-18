@@ -28,6 +28,9 @@ public:
     Texture2D (const char *filename, GLenum wrapParams = GL_REPEAT, GLenum filterParams = GL_LINEAR);
     ~Texture2D();
     void activate(GLenum textureUnit);
+    inline void deactivate(){
+        glBindTexture(GL_TEXTURE_2D, 0);
+    }
 
 private:
 

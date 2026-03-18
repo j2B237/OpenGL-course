@@ -14,6 +14,10 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 
 #include <iostream>
 #include "Shader.h"
@@ -56,6 +60,11 @@ unsigned int indices[] = {
     0, 1, 3,
     1, 2, 3
 };
+
+glm::mat4 trans;
+
+
+// ======== MAIN PROGRAM ENTRY POINT ======= //
 
 
 int
@@ -142,16 +151,21 @@ main(int argc, char *argv[])
 
 
         // Update World
-
+        trans = glm::mat4(1.0f);
+        trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+        trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
 
         // Drawing commands
         
         program->use();
+
         containertex->activate(GL_TEXTURE0);
         program->setInt("containerTex", 0);
-
+        program->setMat4("trans", trans);
+        
         render(program);
 
+        containertex->deactivate();
 
         // Poll events
         glfwPollEvents();
@@ -208,7 +222,10 @@ render(GLvoid *prog)
 
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (GLvoid*)0);
 
+        // Unbind buffers
+        //glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
     }
     glBindVertexArray(0);
-    glBindTexture(GL_TEXTURE_2D, 0);
 }

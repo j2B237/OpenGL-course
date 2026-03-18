@@ -8,6 +8,9 @@
 #include <fstream>
 #include <iostream>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 class Shader 
 {
 public:
@@ -18,7 +21,8 @@ public:
     void setInt (const std::string &name, GLint value);
     void setFloat (const std::string &name, GLfloat value);
     void setBool (const std::string &name, bool value);
-
+    void setMat4(const std::string &name, glm::mat4 matrix);
+    
     inline GLuint getId() const {return m_id;}
 
 private:
