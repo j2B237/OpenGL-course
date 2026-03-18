@@ -18,7 +18,7 @@
 #include <iostream>
 
 #define DEBUG 1
-#define TAG "TEXTURE::"
+#define TEXTURE_TAG "TEXTURE::"
 
 class Texture2D
 {

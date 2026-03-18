@@ -19,7 +19,7 @@ Texture2D::~Texture2D()
 {
     if (m_Id != 0){
         glDeleteTextures (1, &m_Id);
-        std::cerr << TAG << "DESTRUCTOR::CALL\n";
+        std::cerr << TEXTURE_TAG << "DESTRUCTOR::CALL\n";
     }    
 }
 
@@ -63,7 +63,7 @@ void Texture2D::loadImageFromFile(const char *filename)
     if(m_data){
         
 #if DEBUG == 1
-    std::cerr << TAG << "Texture's size is " << m_width << " x " << m_height << " pixels\n";
+    std::cerr << TEXTURE_TAG << "Texture's size is " << m_width << " x " << m_height << " pixels\n";
 #endif
         if (extension.compare("jpg") == 0){
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGB, GL_UNSIGNED_BYTE, (GLvoid*)m_data);
@@ -75,7 +75,7 @@ void Texture2D::loadImageFromFile(const char *filename)
        }
     }
     else{
-        std::cerr << TAG << "failed to load image\n";
+        std::cerr << TEXTURE_TAG << "failed to load image\n";
     }
 
     stbi_image_free(m_data);
@@ -87,7 +87,7 @@ void Texture2D::createTexture(GLenum wrapParams, GLenum filterParams)
     glBindTexture(GL_TEXTURE_2D, m_Id);
 
 #if DEBUG == 1
-    std::cerr << TAG << "ID : " << m_Id << "\n";
+    std::cerr << TEXTURE_TAG << "ID : " << m_Id << "\n";
 #endif
 
     // Wrapping params
