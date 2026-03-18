@@ -108,6 +108,8 @@ main(int argc, char *argv[])
 
     // Shaders 
     Shader *program = new Shader("./data/shaders/vertex.glsl", "./data/shaders/fragment.glsl");
+    Shader *program2 = new Shader("./data/shaders/vertex.glsl", "./data/shaders/fragment.glsl");
+
     if(program == nullptr){
         std::cerr << TAG << "Shader instantiation failed\n";
         glfwTerminate();
@@ -135,7 +137,12 @@ main(int argc, char *argv[])
     // Textures
     Texture2D *containertex = new Texture2D("./data/textures/container.jpg");
     if (containertex == nullptr){
-        std::cerr << TAG << "Texture instantiation failed\n";
+        std::cerr << TAG << "Container texture instantiation failed!\n";
+    }
+
+    Texture2D *emojiTex = new Texture2D("./data/textures/emoji.png");
+    if(emojiTex == nullptr){
+        std::cerr << TAG << "Emoji texture instantiation failed!\n";
     }
 
     // ====== Game loop ========== //
@@ -150,22 +157,55 @@ main(int argc, char *argv[])
         processInput(window);
 
 
-        // Update World
-        trans = glm::mat4(1.0f);
-        trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-        trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
+        // ===  Update World ==== //
 
-        // Drawing commands
-        
+        // First container object
+
         program->use();
+
+        trans = glm::mat4(1.0f);
+        trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+        trans = glm::translate(trans, glm::vec3(1.0f, 0.0f, 0.0f));
+        trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
 
         containertex->activate(GL_TEXTURE0);
         program->setInt("containerTex", 0);
+
+        emojiTex->activate(GL_TEXTURE1);
+        program->setInt("emojiTex", 1);
+
         program->setMat4("trans", trans);
+
+
+        // Second container object
+
+        program2->use();
+
+        trans = glm::mat4(1.0f);
+        /* 
+            Goes up and down starting at top left position of the screen
+        */
+        trans = glm::translate(trans, glm::vec3(-0.5f, sin((float)glfwGetTime()), 0.0f));
+        //trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+        trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
+
+        containertex->activate(GL_TEXTURE0);
+        program2->setInt("containerTex", 0);
+
+        emojiTex->activate(GL_TEXTURE1);
+        program2->setInt("emojiTex", 1);
+
+        program2->setMat4("trans", trans);
+
         
+        // ======== Drawing commands ======= //
+    
+
         render(program);
+        render(program2);
 
         containertex->deactivate();
+        emojiTex->deactivate();
 
         // Poll events
         glfwPollEvents();
