@@ -250,17 +250,21 @@ render(GLvoid *prog)
     glBindVertexArray(vaos[0]);
     {
         // Tell OpenGL how position's vertices are layed out
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
-        glEnableVertexAttribArray(0);
+        
+        glBindBuffer(GL_ARRAY_BUFFER, vbos[0]);                                                 // Make the 0th buffer (array buffer) active
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebos[0]);                                         // Make the 0th element array buffer active
 
-        // Same but for the texture
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);       // Associate the 0th vertex attribute with the 0th array buffer 
+        glEnableVertexAttribArray(0);                                                           // Enable the 0th vertex attribute
+
+        // We do the same for the texture
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
         glEnableVertexAttribArray(1);
 
-        glBindBuffer(GL_ARRAY_BUFFER, vbos[0]);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebos[0]);
-
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (GLvoid*)0);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (GLvoid*)0);                           // Data stored in the 0th VBO will be transmitted to the vertex attribute
+                                                                                                // that has layout qualifier with location = 0 in the vertex shader.
+                                                                                                // Those data are sent the respecting the order define by index stored
+                                                                                                // the indices C++ array objects.
 
         // Unbind buffers
         //glBindBuffer(GL_ARRAY_BUFFER, 0);
