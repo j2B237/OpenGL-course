@@ -45,15 +45,53 @@ const char *TITLE {"LearnOpenGL - Coordinates Systems"};
 
 GLuint vaos[NUMVAOS];
 GLuint vbos[NUMVBOS];
-GLuint ebos[NUMVBOS];
+//GLuint ebos[NUMVBOS];
 
 
-GLfloat vertices [] = {
-    // Position              // Texture coordinates
-     0.5f,  0.5f, 0.0f,      1.0f, 1.0f,
-     0.5f, -0.5f, 0.0f,      1.0f, 0.0f,
-    -0.5f, -0.5f, 0.0f,      0.0f, 0.0f,
-    -0.5f,  0.5f, 0.0f,      0.0f, 1.0f
+
+GLfloat vertices []= {
+    // Position          // Texture coordinates
+    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
 };
 
 unsigned int indices[] = {
@@ -128,9 +166,9 @@ main(int argc, char *argv[])
         glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
         // EBOS
-        glGenBuffers(NUMVBOS, ebos);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebos[0]);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+        //glGenBuffers(NUMVBOS, ebos);
+        //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebos[0]);
+        //glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
     }
     glBindVertexArray(0);
@@ -157,13 +195,18 @@ main(int argc, char *argv[])
 
     program->setMat4("projectionMat", projectionMat);
 
+    // Enable depth-testing 
+    glEnable(GL_DEPTH_TEST);
+
     // ====== Game loop ========== //
 
     while (!glfwWindowShouldClose(window)){
 
         // Clear background color
         glClearColor(0.6f, 0.6f, 0.6f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+
+        // Clear color and depth buffer
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
         // Process Input
@@ -192,7 +235,8 @@ main(int argc, char *argv[])
 
         glm::mat4 viewMat = glm::mat4(1.0f);
         viewMat = glm::translate(viewMat, glm::vec3(0.0f, 0.0f, zOffset));
-
+        viewMat = glm::rotate(viewMat, (float)glfwGetTime(), glm::vec3(0.5f, 1.0f, 0.0f));
+        viewMat = glm::scale(viewMat, glm::vec3(0.75f, 0.75f, 0.75f));
 
         // Assign a texture unit to individual uniform sampler2D objects
 
@@ -281,7 +325,6 @@ processInput(GLFWwindow *window)
         }
         zOffset += inc * direction;
     }
-    
 }
 
 void
@@ -295,7 +338,7 @@ render(GLvoid *prog)
         // Tell OpenGL how position's vertices are layed out
         
         glBindBuffer(GL_ARRAY_BUFFER, vbos[0]);                                                 // Make the 0th buffer (array buffer) active
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebos[0]);                                         // Make the 0th element array buffer active
+        //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebos[0]);                                         // Make the 0th element array buffer active
 
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);       // Associate the 0th vertex attribute with the 0th array buffer 
         glEnableVertexAttribArray(0);                                                           // Enable the 0th vertex attribute
@@ -304,14 +347,16 @@ render(GLvoid *prog)
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
         glEnableVertexAttribArray(1);
 
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (GLvoid*)0);                           // Data stored in the 0th VBO will be transmitted to the vertex attribute
+        //glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, (GLvoid*)0);                           // Data stored in the 0th VBO will be transmitted to the vertex attribute
                                                                                                 // that has layout qualifier with location = 0 in the vertex shader.
                                                                                                 // Those data are sent the respecting the order define by index stored
                                                                                                 // the indices C++ array objects.
 
+        glDrawArrays (GL_TRIANGLES, 0, 36);
+
         // Unbind buffers
         //glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
     }
     glBindVertexArray(0);
